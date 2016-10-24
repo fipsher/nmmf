@@ -1,0 +1,26 @@
+c:\users\exoft-os-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\NMMP.Triangulation.exe.config
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\NMMP.Triangulation.exe
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\NMMP.Triangulation.pdb
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\Triangle.dll
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.csprojResolveAssemblyReference.cache
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.Properties.Resources.resources
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.csproj.GenerateResource.Cache
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.exe
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.pdb
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.Form1.resources
+C:\Users\EXOFT-OS-01\documents\visual studio 2015\Projects\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\UnityEngine.dll
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\NMMP.Triangulation.exe.config
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.exe
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.pdb
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\NMMP.Triangulation.exe
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\NMMP.Triangulation.pdb
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\Triangle.dll
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\UnityEngine.dll
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.csprojResolveAssemblyReference.cache
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.Form1.resources
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.Properties.Resources.resources
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\obj\Debug\NMMP.Triangulation.csproj.GenerateResource.Cache
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\MathNet.Numerics.dll
+C:\Users\Андрій\Desktop\NMMP.Triangulation\NMMP.Triangulation\bin\Debug\MathNet.Numerics.xml
