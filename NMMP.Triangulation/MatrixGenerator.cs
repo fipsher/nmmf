@@ -4,7 +4,6 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using TriangleNet.Geometry;
 using TriangleNet.Meshing;
-using TriangleNet.Topology;
 
 namespace NMMP.Triangulation
 {
@@ -58,7 +57,8 @@ namespace NMMP.Triangulation
         {
             foreach (var triangle in _triangles)
             {
-                var bIn2 = Math.Pow(GetTriangleSquare(triangle) * 2, 2);
+                var b = GetTriangleSquare(triangle) * 2;
+                var bIn2 = Math.Pow(b, 2);
                 var pX = 0d;
                 var pY = 0d;
                 for (var i = 0; i < 3; i++)
@@ -90,8 +90,8 @@ namespace NMMP.Triangulation
                     for (var j = 0; j < 3; j++)
                     {
                         var beforeDivide = Math.Pow(_a[0], 2) * coefsMatrix[i][1] * coefsMatrix[j][1] +
-                                  Math.Pow(_a[1], 2) * coefsMatrix[i][1] * coefsMatrix[j][2];
-                        A[i, j] = beforeDivide / bIn2;
+                                           Math.Pow(_a[1], 2) * coefsMatrix[i][2] * coefsMatrix[j][2];//changes
+                        A[i, j] = beforeDivide / (2 * b);
                     }
                 }
 
@@ -124,8 +124,7 @@ namespace NMMP.Triangulation
             {
                 var square = GetTriangleSquare(triangle);
                 var matrix = DenseMatrix.OfArray(ME);
-                //TODO: ask is b = 2 * Sijm ? If yes =>  matrix.Multiply(square * _d / 48);
-                matrix.Multiply(2 * square * _d / 24);
+                matrix.Multiply(2 * square  * _d / 24);
                 Me.Add(matrix);
             }
         }
@@ -140,7 +139,8 @@ namespace NMMP.Triangulation
                 foreach (var segment in side)
                 {
                     var vector = new[] { _func(segment.Vertex1.X, segment.Vertex1.Y), _func(segment.Vertex2.X, segment.Vertex2.Y) };
-                    var re = leftSide * (new DenseVector(vector)) - rigthSide * (new DenseVector(vector));
+                    var re = leftSide * (new DenseVector(vector)) // TODO * smth
+                             - rigthSide * (new DenseVector(vector));//TODO *smth
                     Re.Add(re);
                 }
             }
