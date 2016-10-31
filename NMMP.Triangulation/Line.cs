@@ -4,7 +4,7 @@ using TriangleNet.Geometry;
 namespace NMMP.Triangulation
 {
     [Serializable]
-    internal class Line
+    public  class Line
     {
         public Vertex Vertex1 { get; set; }
         public Vertex Vertex2 { get; set; }

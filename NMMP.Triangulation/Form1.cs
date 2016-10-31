@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using TriangleNet.Geometry;
 using TriangleNet.Meshing;
+using TriangleNet.Topology;
 
 namespace NMMP.Triangulation
 {
@@ -13,6 +14,8 @@ namespace NMMP.Triangulation
         private IMesh _mesh;
         private int _figure = 1;
         private List<ISegment> _segments;
+
+        private Dictionary<int, List<Condition>> conditions = new Dictionary<int, List<Condition>>();
 
         public Form1()
         {
@@ -59,6 +62,11 @@ namespace NMMP.Triangulation
         private void button1_Click(object sender, EventArgs e)
         {
 
+            var sigma = Convert.ToDouble(tbSigma.Text.Replace('.', ','));
+            var beta = Convert.ToDouble(tbBeta.Text.Replace('.', ','));
+            GenerateConditions(sigma, beta);
+
+
             var polygon = GeneratePolygone();
             var area = Convert.ToDouble(textBox1.Text.Replace('.', ','));
             var options = new ConstraintOptions() { ConformingDelaunay = true };
@@ -79,19 +87,18 @@ namespace NMMP.Triangulation
             var ct = _mesh.Vertices;
             var ntg = GetNtgSegments();
 
+
             DataToJsonWriter.Write(nt.ToList(), "NT.json");
             DataToJsonWriter.Write(ct.ToList(), "CT.json");
             DataToJsonWriter.Write(ntg.ToList(), "NTG.json");
 
-            var sigma = Convert.ToDouble(tbSigma.Text.Replace('.', ',')); ;
-            var beta = Convert.ToDouble(tbBeta.Text.Replace('.', ',')); ;
-            var aVect = new double[]
+            var aVect = new []
             {
                 Convert.ToDouble(tbA11.Text.Replace('.', ',')),
                 Convert.ToDouble(tbA22.Text.Replace('.', ','))
-        };
+            };
             var d = Convert.ToDouble(tbD.Text.Replace('.', ',')); ;
-            MatrixGenerator gen = new MatrixGenerator(_mesh, _func, d, aVect, ntg, sigma, beta);
+            var gen = new MatrixGenerator(_mesh, _func, d, aVect, ntg);
 
             gen.FillMatrixes();
 
@@ -134,26 +141,59 @@ namespace NMMP.Triangulation
         }
         #endregion
 
-        private IEnumerable<List<Line>> GetNtgSegments()
+        private void GenerateConditions(double sigmaValue, double bethaValue)
         {
-            var result =
-                _segments.Select(segment => (from el in _mesh.Segments
-                let frstVertex = el.GetVertex(0)
-                let secondVertex = el.GetVertex(1)
-                let firstFlag =
-                    // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    ((frstVertex.X - segment.GetVertex(0).X)*(segment.GetVertex(1).Y - segment.GetVertex(0).Y) ==
-                     (segment.GetVertex(1).X - segment.GetVertex(0).X)*(frstVertex.Y - segment.GetVertex(0).Y))
-                let secondFlag =
-                    // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    ((secondVertex.X - segment.GetVertex(0).X)*(segment.GetVertex(1).Y - segment.GetVertex(0).Y) ==
-                     (segment.GetVertex(1).X - segment.GetVertex(0).X)*(secondVertex.Y - segment.GetVertex(0).Y))
-                where firstFlag && secondFlag
-                select el).ToList())
-                .Select(segmentsToAdd => segmentsToAdd.Select(el => new Line(el.GetVertex(0), el.GetVertex(1))).ToList())
-                .ToList();
+            var firstCondition = new Condition(Math.Pow(0.1, 6), sigmaValue, 1);
+            var secondCondition = new Condition(Math.Pow(0.1, 6), sigmaValue, Math.Pow(0.1, 6));
+            var thirdCondition = new Condition(bethaValue, sigmaValue, 1);
+            //1
+            var cond1 = new List<Condition>() { firstCondition, firstCondition, firstCondition };
+            //2
+            var cond2 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition };
+            //3
+            var cond3 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition };
+            //4
+            var cond4 = new List<Condition>() { firstCondition, firstCondition, firstCondition };
+            //5
+            var cond5 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition };
+            //6
+            var cond6 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition, firstCondition, firstCondition};
 
-            return result;
+            conditions = new Dictionary<int, List<Condition>>();
+            conditions.Add(1, cond1);
+            conditions.Add(2, cond2);
+            conditions.Add(3, cond3);
+            conditions.Add(4, cond4);
+            conditions.Add(5, cond5);
+            conditions.Add(6, cond6);
+        }
+
+        private IEnumerable<Condition> GetNtgSegments()
+        {
+            var lines =
+                        _segments.Select(segment => (
+                            from el in _mesh.Segments
+                                let frstVertex = el.GetVertex(0)
+                                let secondVertex = el.GetVertex(1)
+                                let firstFlag = ((frstVertex.X - segment.GetVertex(0).X)*(segment.GetVertex(1).Y - segment.GetVertex(0).Y)
+                                                 == (segment.GetVertex(1).X - segment.GetVertex(0).X)*(frstVertex.Y - segment.GetVertex(0).Y))
+                                let secondFlag = ((secondVertex.X - segment.GetVertex(0).X)*(segment.GetVertex(1).Y - segment.GetVertex(0).Y) 
+                                                  == (segment.GetVertex(1).X - segment.GetVertex(0).X)*(secondVertex.Y - segment.GetVertex(0).Y))
+                            where firstFlag && secondFlag
+                            select el)
+                            .ToList())
+                        .Select(segmentsToAdd => segmentsToAdd.Select(el => new Line(el.GetVertex(0), el.GetVertex(1))).ToList())
+                        .ToList();
+
+
+            List<Condition> conds;
+            if (!conditions.TryGetValue(_figure, out conds)) return null;
+            if (conds.Count != lines.Count) return conds;
+            for (var i = 0; i < conds.Count; i++)
+            {
+                conds[i].Segments = lines[i];
+            }
+            return conds;
         }
 
         private Polygon GeneratePolygone()

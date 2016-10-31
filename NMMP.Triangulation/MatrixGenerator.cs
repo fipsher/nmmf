@@ -11,7 +11,8 @@ namespace NMMP.Triangulation
     {
         public List<DenseMatrix> Ke { get; private set; }
         public List<DenseMatrix> Me { get; private set; }
-        public List<DenseVector> Re { get; private set; }
+        public List<Matrix<double>> ReLeft { get; private set; }
+        public List<Vector<double>> ReRight { get; private set; }
         public List<Vector<double>> Qe { get; private set; }
 
         private static readonly double[,] ME = { { 2, 1, 1 }, { 1, 2, 1 }, { 1, 1, 2 } };
@@ -19,23 +20,23 @@ namespace NMMP.Triangulation
         private readonly Func<double, double, double> _func;
         private readonly double _d;
         private readonly double[] _a;
-        private readonly double _sigma;
-        private readonly double _beta;
-        private readonly IEnumerable<List<Line>> _ntg;
+
+        private readonly IEnumerable<Condition> _ntg;
+        private readonly double Uc = 1;
 
 
-        public MatrixGenerator(IMesh mesh, Func<double, double, double> func, double d, double[] a, IEnumerable<List<Line>> ntg, double sigma, double beta)
+        public MatrixGenerator(IMesh mesh, Func<double, double, double> func, double d, double[] a, IEnumerable<Condition> ntg)
         {
             _ntg = ntg;
-            _sigma = sigma;
-            _beta = beta;
+
             _triangles = mesh.Triangles;
             _func = func;
             _d = d;
 
             Me = new List<DenseMatrix>();
             Qe = new List<Vector<double>>();
-            Re = new List<DenseVector>();
+            ReLeft = new List<Matrix<double>>();
+            ReRight = new List<Vector<double>>();
             Ke = new List<DenseMatrix>();
 
             if (a.Length != 2)
@@ -129,19 +130,24 @@ namespace NMMP.Triangulation
             }
         }
 
+
         private void GenerateReMatrixes()
         {
             var matrix = DenseMatrix.OfArray(new double[,] { { 1, 2 }, { 2, 1 } });
-            var leftSide = _sigma / _beta * matrix;
-            var rigthSide = _sigma / _beta * matrix;
             foreach (var side in _ntg)
             {
-                foreach (var segment in side)
+                var leftSide = side.Sigma / side.Beta * matrix;
+                var rigthSide = side.Sigma / side.Beta * matrix;
+                var vector = new[] { Uc * side.UcCof, Uc * side.UcCof };
+                foreach (var segment in side.Segments)
                 {
-                    var vector = new[] { _func(segment.Vertex1.X, segment.Vertex1.Y), _func(segment.Vertex2.X, segment.Vertex2.Y) };
-                    var re = leftSide * (new DenseVector(vector)) // TODO * smth
-                             - rigthSide * (new DenseVector(vector));//TODO *smth
-                    Re.Add(re);
+                    var length = Math.Sqrt(Math.Pow(segment.Vertex1.X - segment.Vertex2.X, 2) +
+                                           Math.Pow(segment.Vertex1.Y - segment.Vertex2.Y, 2));
+
+                    var reLeft = (leftSide * length / 6);
+                    var reRight = (rigthSide * length / 6) * (new DenseVector(vector));
+                    ReLeft.Add(reLeft);
+                    ReRight.Add(reRight);
                 }
             }
         }
