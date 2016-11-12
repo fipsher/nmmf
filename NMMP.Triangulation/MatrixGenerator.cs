@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using TriangleNet.Geometry;
@@ -15,6 +16,9 @@ namespace NMMP.Triangulation
         public List<Vector<double>> ReRight { get; private set; }
         public List<Vector<double>> Qe { get; private set; }
 
+        public DenseMatrix A { get; set; }
+        public DenseVector B { get; set; }
+
         private static readonly double[,] ME = { { 2, 1, 1 }, { 1, 2, 1 }, { 1, 1, 2 } };
         private readonly IEnumerable<ITriangle> _triangles;
         private readonly Func<double, double, double> _func;
@@ -23,12 +27,13 @@ namespace NMMP.Triangulation
 
         private readonly IEnumerable<Condition> _ntg;
         private readonly double Uc = 1;
+        private readonly int _vertexesCount;
 
 
         public MatrixGenerator(IMesh mesh, Func<double, double, double> func, double d, double[] a, IEnumerable<Condition> ntg)
         {
             _ntg = ntg;
-
+            _vertexesCount = mesh.Vertices.Count;
             _triangles = mesh.Triangles;
             _func = func;
             _d = d;
@@ -52,7 +57,42 @@ namespace NMMP.Triangulation
             GenerateQe();
             GenerateKe();
             GenerateRe();
+
+            SummMatrixes();
+
+            var result = A.Solve(B);
         }
+
+        private void SummMatrixes()
+        {
+            var a = new double[_vertexesCount, _vertexesCount];
+            var b = new double[_vertexesCount];
+            var triangleIndex = 0;
+            foreach (var triangle in _triangles)
+            {
+                for (var i = 0; i < 3; i++)
+                {
+                    var ai = triangle.GetVertexID(i);
+                    for (var j = 0; j < 3; j++)
+                    {
+                        var aj = triangle.GetVertexID(j);
+                        var temp = Ke[triangleIndex][i, j] + Me[triangleIndex][i, j];
+                        a[ai, aj] += (j < 2 && i < 2)
+                            ? temp
+                            : temp + ReLeft[triangleIndex][i, j];
+                    }
+                    var tempValue = Qe[triangleIndex][i];
+                    b[ai] += (i < 2) 
+                        ? tempValue
+                        : tempValue + ReRight[triangleIndex][i];
+
+                }
+                triangleIndex++;
+            }
+            A = DenseMatrix.OfArray(a);
+            B = DenseVector.OfArray(b);
+        }
+
 
         private void GenerateKe()
         {
@@ -82,7 +122,7 @@ namespace NMMP.Triangulation
                     {
                         var beforeDivide = Math.Pow(_a[0], 2) * coefsMatrix[i][1] * coefsMatrix[j][1] +
                                            Math.Pow(_a[1], 2) * coefsMatrix[i][2] * coefsMatrix[j][2];
-                        A[i, j] = beforeDivide/(2*b);// : (-1)*beforeDivide/(2*b);
+                        A[i, j] = beforeDivide / (2 * b);// : (-1)*beforeDivide/(2*b);
                     }
                 }
 
@@ -115,7 +155,7 @@ namespace NMMP.Triangulation
             {
                 var square = GetTriangleSquare(triangle);
                 var matrix = DenseMatrix.OfArray(ME);
-                var res = matrix * (2d * square  * _d / 24d);
+                var res = matrix * (2d * square * _d / 24d);
                 Me.Add(res);
             }
         }
