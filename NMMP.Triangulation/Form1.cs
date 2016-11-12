@@ -102,6 +102,11 @@ namespace NMMP.Triangulation
 
             gen.FillMatrixes();
 
+            DataToJsonWriter.Write(gen.Ke.Select(k => k.Storage).ToList(), "KE.json");
+            DataToJsonWriter.Write(gen.Qe, "Qe.json");
+            DataToJsonWriter.Write(gen.Me.Select(k => k.Storage).ToList(), "Me.json");
+            DataToJsonWriter.Write(gen.ReLeft.Select(k => k.Storage).ToList(), "ReLeft.json");
+            DataToJsonWriter.Write(gen.ReRight, "ReRight.json");
         }
         #region RadioBtnChange
 
@@ -147,7 +152,7 @@ namespace NMMP.Triangulation
             var secondCondition = new Condition(Math.Pow(0.1, 6), sigmaValue, Math.Pow(0.1, 6));
             var thirdCondition = new Condition(bethaValue, sigmaValue, 1);
             //1
-            var cond1 = new List<Condition>() { firstCondition, firstCondition, firstCondition };
+            var cond1 = new List<Condition>() { firstCondition, secondCondition, thirdCondition };
             //2
             var cond2 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition };
             //3
@@ -159,13 +164,15 @@ namespace NMMP.Triangulation
             //6
             var cond6 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition, firstCondition, firstCondition};
 
-            conditions = new Dictionary<int, List<Condition>>();
-            conditions.Add(1, cond1);
-            conditions.Add(2, cond2);
-            conditions.Add(3, cond3);
-            conditions.Add(4, cond4);
-            conditions.Add(5, cond5);
-            conditions.Add(6, cond6);
+            conditions = new Dictionary<int, List<Condition>>
+            {
+                {1, cond1},
+                {2, cond2},
+                {3, cond3},
+                {4, cond4},
+                {5, cond5},
+                {6, cond6}
+            };
         }
 
         private IEnumerable<Condition> GetNtgSegments()

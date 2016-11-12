@@ -48,35 +48,25 @@ namespace NMMP.Triangulation
 
         public void FillMatrixes()
         {
-            GenerateMeMatrixes();
-            GenerateQeMatrixes();
-            GenerateKeMatrixes();
-            GenerateReMatrixes();
+            GenerateMe();
+            GenerateQe();
+            GenerateKe();
+            GenerateRe();
         }
 
-        private void GenerateKeMatrixes()
+        private void GenerateKe()
         {
             foreach (var triangle in _triangles)
             {
                 var b = GetTriangleSquare(triangle) * 2;
-                var bIn2 = Math.Pow(b, 2);
-                var pX = 0d;
-                var pY = 0d;
-                for (var i = 0; i < 3; i++)
-                {
-                    pX += triangle.GetVertex(i).X;
-                    pY += triangle.GetVertex(i).Y;
-                }
-                pX *= 0.33;
-                pY *= 0.33;
-                var vp = new Vertex(pX, pY);
 
+                var vi = triangle.GetVertex(0);
                 var vj = triangle.GetVertex(1);
                 var vm = triangle.GetVertex(2);
 
                 var pjmCoeffs = GetCoefficients(vj, vm);
-                var ipmCoeffs = GetCoefficients(vp, vm);
-                var ijpCoeffs = GetCoefficients(vj, vp);
+                var ipmCoeffs = GetCoefficients(vm, vi);
+                var ijpCoeffs = GetCoefficients(vi, vj);
 
                 var coefsMatrix = new[]
                 {
@@ -91,8 +81,8 @@ namespace NMMP.Triangulation
                     for (var j = 0; j < 3; j++)
                     {
                         var beforeDivide = Math.Pow(_a[0], 2) * coefsMatrix[i][1] * coefsMatrix[j][1] +
-                                           Math.Pow(_a[1], 2) * coefsMatrix[i][2] * coefsMatrix[j][2];//changes
-                        A[i, j] = beforeDivide / (2 * b);
+                                           Math.Pow(_a[1], 2) * coefsMatrix[i][2] * coefsMatrix[j][2];
+                        A[i, j] = beforeDivide/(2*b);// : (-1)*beforeDivide/(2*b);
                     }
                 }
 
@@ -102,7 +92,7 @@ namespace NMMP.Triangulation
             }
         }
 
-        private void GenerateQeMatrixes()
+        private void GenerateQe()
         {
             var j = 0;
             foreach (var triangle in _triangles)
@@ -119,25 +109,26 @@ namespace NMMP.Triangulation
             }
         }
 
-        private void GenerateMeMatrixes()
+        private void GenerateMe()
         {
             foreach (var triangle in _triangles)
             {
                 var square = GetTriangleSquare(triangle);
                 var matrix = DenseMatrix.OfArray(ME);
-                matrix.Multiply(2 * square  * _d / 24);
-                Me.Add(matrix);
+                var res = matrix * (2d * square  * _d / 24d);
+                Me.Add(res);
             }
         }
 
 
-        private void GenerateReMatrixes()
+        private void GenerateRe()
         {
             var matrix = DenseMatrix.OfArray(new double[,] { { 1, 2 }, { 2, 1 } });
             foreach (var side in _ntg)
             {
                 var leftSide = side.Sigma / side.Beta * matrix;
                 var rigthSide = side.Sigma / side.Beta * matrix;
+
                 var vector = new[] { Uc * side.UcCof, Uc * side.UcCof };
                 foreach (var segment in side.Segments)
                 {
