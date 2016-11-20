@@ -77,12 +77,12 @@ namespace NMMP.Triangulation
                     {
                         var aj = triangle.GetVertexID(j);
                         var temp = Ke[triangleIndex][i, j] + Me[triangleIndex][i, j];
-                        a[ai, aj] += (j < 2 && i < 2)
+                        a[ai, aj] += (j >= 2 || i >= 2)
                             ? temp
                             : temp + ReLeft[triangleIndex][i, j];
                     }
                     var tempValue = Qe[triangleIndex][i];
-                    b[ai] += (i < 2) 
+                    b[ai] += (i >= 2) 
                         ? tempValue
                         : tempValue + ReRight[triangleIndex][i];
 

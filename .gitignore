@@ -24,3 +24,4 @@ packages/Newtonsoft.Json.9.0.1/lib/portable-net45+wp80+win8+wpa81/Newtonsoft.Jso
 packages/Newtonsoft.Json.9.0.1/tools/install.ps1
 packages/Triangle.0.0.6-Beta3/Triangle.0.0.6-Beta3.nupkg
 packages/UnityEngine.1.0.0/UnityEngine.1.0.0.nupkg
+NMMP.Triangulation/bin/

@@ -17,5 +17,13 @@ namespace NMMP.Triangulation
             //write string to file
             System.IO.File.WriteAllText(path, json);
         }
+
+        public static void WriteOne<T>(T data, string path)
+        {
+            var json = JsonConvert.SerializeObject(data);
+
+            //write string to file
+            System.IO.File.WriteAllText(path, json);
+        }
     }
 }

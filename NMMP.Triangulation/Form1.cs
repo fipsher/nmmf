@@ -107,6 +107,9 @@ namespace NMMP.Triangulation
             DataToJsonWriter.Write(gen.Me.Select(k => k.Storage).ToList(), "Me.json");
             DataToJsonWriter.Write(gen.ReLeft.Select(k => k.Storage).ToList(), "ReLeft.json");
             DataToJsonWriter.Write(gen.ReRight, "ReRight.json");
+
+            DataToJsonWriter.WriteOne(gen.A.ToArray(), "A.json");
+            DataToJsonWriter.WriteOne(gen.B.ToArray(), "B.json");
         }
         #region RadioBtnChange
 
