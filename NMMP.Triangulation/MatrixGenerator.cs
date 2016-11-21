@@ -59,8 +59,6 @@ namespace NMMP.Triangulation
             GenerateRe();
 
             SummMatrixes();
-
-            var result = A.Solve(B);
         }
 
         private void SummMatrixes()
@@ -76,18 +74,28 @@ namespace NMMP.Triangulation
                     for (var j = 0; j < 3; j++)
                     {
                         var aj = triangle.GetVertexID(j);
-                        var temp = Ke[triangleIndex][i, j] + Me[triangleIndex][i, j];
-                        a[ai, aj] += (j >= 2 || i >= 2)
-                            ? temp
-                            : temp + ReLeft[triangleIndex][i, j];
+                        a[ai, aj] += Ke[triangleIndex][i, j] + Me[triangleIndex][i, j];
                     }
-                    var tempValue = Qe[triangleIndex][i];
-                    b[ai] += (i >= 2) 
-                        ? tempValue
-                        : tempValue + ReRight[triangleIndex][i];
+                    b[ai] += Qe[triangleIndex][i];
 
                 }
                 triangleIndex++;
+            }
+
+            var ntg = _ntg.ToList();
+            for (int k = 0; k < ntg.Count; k++)
+            {
+                for (int i = 0; i < ntg[k].Segments.Count; i++)
+                {
+                    var ai = ntg[k].Segments[i].Vertex1.ID;
+                    var aj = ntg[k].Segments[i].Vertex2.ID;
+                    a[ai, ai] += ReLeft[k][0, 0];
+                    a[ai, aj] += ReLeft[k][0, 1];
+                    a[aj, ai] += ReLeft[k][1, 0];
+                    a[aj, aj] += ReLeft[k][1, 1];
+                    b[ai] += ReRight[k][0];
+                    b[aj] += ReRight[k][1];
+                }
             }
             A = DenseMatrix.OfArray(a);
             B = DenseVector.OfArray(b);

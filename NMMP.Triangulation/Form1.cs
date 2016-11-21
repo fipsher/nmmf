@@ -110,6 +110,9 @@ namespace NMMP.Triangulation
 
             DataToJsonWriter.WriteOne(gen.A.ToArray(), "A.json");
             DataToJsonWriter.WriteOne(gen.B.ToArray(), "B.json");
+
+            var result = gen.A.Solve(gen.B);
+            DataToJsonWriter.WriteOne(result, "x.json");
         }
         #region RadioBtnChange
 
