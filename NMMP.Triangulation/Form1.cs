@@ -64,7 +64,7 @@ namespace NMMP.Triangulation
         {
             var sigmas = tbSigma.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => Convert.ToDouble(s.Replace(',', '.')));
-            var betas = tbSigma.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            var betas = tbBeta.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(b => Convert.ToDouble(b.Replace(',', '.')));
             var d = tbD.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(b => Convert.ToDouble(b.Replace(',', '.')));
