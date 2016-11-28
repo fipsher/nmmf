@@ -32,6 +32,16 @@ namespace NMMP.Triangulation
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbD = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tbA22 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbA11 = new System.Windows.Forms.TextBox();
+            this.Beta = new System.Windows.Forms.Label();
+            this.tbBeta = new System.Windows.Forms.TextBox();
+            this.sigma = new System.Windows.Forms.Label();
+            this.tbSigma = new System.Windows.Forms.TextBox();
             this.radioButton6 = new System.Windows.Forms.RadioButton();
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.radioButton4 = new System.Windows.Forms.RadioButton();
@@ -41,16 +51,8 @@ namespace NMMP.Triangulation
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tbSigma = new System.Windows.Forms.TextBox();
-            this.sigma = new System.Windows.Forms.Label();
-            this.Beta = new System.Windows.Forms.Label();
-            this.tbBeta = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbA11 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tbA22 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbD = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -65,6 +67,8 @@ namespace NMMP.Triangulation
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.textBox2);
             this.splitContainer1.Panel1.Controls.Add(this.label5);
             this.splitContainer1.Panel1.Controls.Add(this.tbD);
             this.splitContainer1.Panel1.Controls.Add(this.label4);
@@ -90,6 +94,91 @@ namespace NMMP.Triangulation
             this.splitContainer1.Size = new System.Drawing.Size(1257, 733);
             this.splitContainer1.SplitterDistance = 419;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(254, 81);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(13, 13);
+            this.label5.TabIndex = 17;
+            this.label5.Text = "d";
+            // 
+            // tbD
+            // 
+            this.tbD.Location = new System.Drawing.Point(295, 78);
+            this.tbD.Name = "tbD";
+            this.tbD.Size = new System.Drawing.Size(100, 20);
+            this.tbD.TabIndex = 16;
+            this.tbD.Text = "1 1 1 1 1 1";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(254, 159);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(25, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "a22";
+            // 
+            // tbA22
+            // 
+            this.tbA22.Location = new System.Drawing.Point(295, 156);
+            this.tbA22.Name = "tbA22";
+            this.tbA22.Size = new System.Drawing.Size(100, 20);
+            this.tbA22.TabIndex = 14;
+            this.tbA22.Text = "1";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(254, 133);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(25, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "a11";
+            // 
+            // tbA11
+            // 
+            this.tbA11.Location = new System.Drawing.Point(295, 130);
+            this.tbA11.Name = "tbA11";
+            this.tbA11.Size = new System.Drawing.Size(100, 20);
+            this.tbA11.TabIndex = 12;
+            this.tbA11.Text = "1";
+            // 
+            // Beta
+            // 
+            this.Beta.AutoSize = true;
+            this.Beta.Location = new System.Drawing.Point(254, 55);
+            this.Beta.Name = "Beta";
+            this.Beta.Size = new System.Drawing.Size(28, 13);
+            this.Beta.TabIndex = 11;
+            this.Beta.Text = "beta";
+            // 
+            // tbBeta
+            // 
+            this.tbBeta.Location = new System.Drawing.Point(295, 52);
+            this.tbBeta.Name = "tbBeta";
+            this.tbBeta.Size = new System.Drawing.Size(100, 20);
+            this.tbBeta.TabIndex = 10;
+            this.tbBeta.Text = "1 1 1 1 1 1";
+            // 
+            // sigma
+            // 
+            this.sigma.AutoSize = true;
+            this.sigma.Location = new System.Drawing.Point(254, 26);
+            this.sigma.Name = "sigma";
+            this.sigma.Size = new System.Drawing.Size(36, 13);
+            this.sigma.TabIndex = 9;
+            this.sigma.Text = "Sigma";
+            // 
+            // tbSigma
+            // 
+            this.tbSigma.Location = new System.Drawing.Point(295, 23);
+            this.tbSigma.Name = "tbSigma";
+            this.tbSigma.Size = new System.Drawing.Size(100, 20);
+            this.tbSigma.TabIndex = 8;
+            this.tbSigma.Text = "1 1 1 1 1 1";
             // 
             // radioButton6
             // 
@@ -189,90 +278,22 @@ namespace NMMP.Triangulation
             this.panel1.Size = new System.Drawing.Size(818, 733);
             this.panel1.TabIndex = 0;
             // 
-            // tbSigma
+            // label1
             // 
-            this.tbSigma.Location = new System.Drawing.Point(295, 23);
-            this.tbSigma.Name = "tbSigma";
-            this.tbSigma.Size = new System.Drawing.Size(100, 20);
-            this.tbSigma.TabIndex = 8;
-            this.tbSigma.Text = "1";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(254, 107);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(10, 13);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "f";
             // 
-            // sigma
+            // textBox2
             // 
-            this.sigma.AutoSize = true;
-            this.sigma.Location = new System.Drawing.Point(254, 26);
-            this.sigma.Name = "sigma";
-            this.sigma.Size = new System.Drawing.Size(36, 13);
-            this.sigma.TabIndex = 9;
-            this.sigma.Text = "Sigma";
-            // 
-            // Beta
-            // 
-            this.Beta.AutoSize = true;
-            this.Beta.Location = new System.Drawing.Point(254, 55);
-            this.Beta.Name = "Beta";
-            this.Beta.Size = new System.Drawing.Size(28, 13);
-            this.Beta.TabIndex = 11;
-            this.Beta.Text = "beta";
-            // 
-            // tbBeta
-            // 
-            this.tbBeta.Location = new System.Drawing.Point(295, 52);
-            this.tbBeta.Name = "tbBeta";
-            this.tbBeta.Size = new System.Drawing.Size(100, 20);
-            this.tbBeta.TabIndex = 10;
-            this.tbBeta.Text = "1";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(254, 81);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(25, 13);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "a11";
-            // 
-            // tbA11
-            // 
-            this.tbA11.Location = new System.Drawing.Point(295, 78);
-            this.tbA11.Name = "tbA11";
-            this.tbA11.Size = new System.Drawing.Size(100, 20);
-            this.tbA11.TabIndex = 12;
-            this.tbA11.Text = "1";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(254, 107);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(25, 13);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "a22";
-            // 
-            // tbA22
-            // 
-            this.tbA22.Location = new System.Drawing.Point(295, 104);
-            this.tbA22.Name = "tbA22";
-            this.tbA22.Size = new System.Drawing.Size(100, 20);
-            this.tbA22.TabIndex = 14;
-            this.tbA22.Text = "1";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(254, 133);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(13, 13);
-            this.label5.TabIndex = 17;
-            this.label5.Text = "d";
-            // 
-            // tbD
-            // 
-            this.tbD.Location = new System.Drawing.Point(295, 130);
-            this.tbD.Name = "tbD";
-            this.tbD.Size = new System.Drawing.Size(100, 20);
-            this.tbD.TabIndex = 16;
-            this.tbD.Text = "1";
+            this.textBox2.Location = new System.Drawing.Point(295, 104);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.TabIndex = 18;
+            this.textBox2.Text = "1";
             // 
             // Form1
             // 
@@ -313,6 +334,8 @@ namespace NMMP.Triangulation
         private TextBox tbBeta;
         private Label sigma;
         private TextBox tbSigma;
+        private Label label1;
+        private TextBox textBox2;
     }
 }
 

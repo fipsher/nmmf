@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using TriangleNet.Geometry;
@@ -14,7 +15,7 @@ namespace NMMP.Triangulation
         private IMesh _mesh;
         private int _figure = 1;
         private List<ISegment> _segments;
-
+        private double fValue;
         private Dictionary<int, List<Condition>> conditions = new Dictionary<int, List<Condition>>();
 
         public Form1()
@@ -23,7 +24,7 @@ namespace NMMP.Triangulation
             button1.Enabled = false;
         }
 
-        private double _func(double x, double y) => 1d;
+        private double _func(double x, double y) => fValue;
 
         private void DrawLines(Vertex[] vertices)
         {
@@ -61,10 +62,14 @@ namespace NMMP.Triangulation
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            var sigma = Convert.ToDouble(tbSigma.Text.Replace('.', ','));
-            var beta = Convert.ToDouble(tbBeta.Text.Replace('.', ','));
-            GenerateConditions(sigma, beta);
+            var sigmas = tbSigma.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => Convert.ToDouble(s.Replace(',', '.')));
+            var betas = tbSigma.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(b => Convert.ToDouble(b.Replace(',', '.')));
+            var d = tbD.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(b => Convert.ToDouble(b.Replace(',', '.')));
+            fValue = Convert.ToDouble(textBox2.Text.Replace('.', ','));
+            GenerateConditions(sigmas.ToArray(), betas.ToArray(), d.ToArray());
 
 
             var polygon = GeneratePolygone();
@@ -92,13 +97,13 @@ namespace NMMP.Triangulation
             DataToJsonWriter.Write(ct.ToList(), "CT.json");
             DataToJsonWriter.Write(ntg.ToList(), "NTG.json");
 
-            var aVect = new []
+            var aVect = new[]
             {
                 Convert.ToDouble(tbA11.Text.Replace('.', ',')),
                 Convert.ToDouble(tbA22.Text.Replace('.', ','))
             };
-            var d = Convert.ToDouble(tbD.Text.Replace('.', ',')); ;
-            var gen = new MatrixGenerator(_mesh, _func, d, aVect, ntg);
+           
+            var gen = new MatrixGenerator(_mesh, _func, 1, aVect, ntg);
 
             gen.FillMatrixes();
 
@@ -113,7 +118,25 @@ namespace NMMP.Triangulation
 
             var result = gen.A.Solve(gen.B);
             DataToJsonWriter.WriteOne(result, "x.json");
+
+            WriteResultsToFile(_mesh, result.ToList(), @"C:\Users\Андрій\Documents\nmmf\SolvedResult.txt");
+
         }
+
+        private void WriteResultsToFile(IMesh mesh, List<double> z, string path)
+        {
+            var i = 0;
+            using (var sr = new StreamWriter(path))
+            {
+                foreach (var vert in mesh.Vertices)
+                {
+                    string toWrite = $"{vert.Y.ToString().Replace(',', '.')} {vert.X.ToString().Replace(',', '.')} {z[i++].ToString().Replace(',', '.')}";
+                    sr.WriteLine(toWrite);
+                }
+            }
+
+        }
+
         #region RadioBtnChange
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -152,23 +175,58 @@ namespace NMMP.Triangulation
         }
         #endregion
 
-        private void GenerateConditions(double sigmaValue, double bethaValue)
+        private void GenerateConditions(double[] sigmaValue, double[] bethaValue, double[] dValues)
         {
-            var firstCondition = new Condition(Math.Pow(0.1, 6), sigmaValue, 1);
-            var secondCondition = new Condition(Math.Pow(0.1, 6), sigmaValue, Math.Pow(0.1, 6));
-            var thirdCondition = new Condition(bethaValue, sigmaValue, 1);
+            //var firstCondition = new Condition(Math.Pow(0.1, 6), sigmaValue[0], 2);
+            //var secondCondition = new Condition(Math.Pow(0.1, 6), sigmaValue[0], Math.Pow(0.1, 6));
+            //var thirdCondition = new Condition(bethaValue[0], sigmaValue[0], 1);
             //1
-            var cond1 = new List<Condition>() { firstCondition, secondCondition, thirdCondition };
-            //2
-            var cond2 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition };
-            //3
-            var cond3 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition };
-            //4
-            var cond4 = new List<Condition>() { firstCondition, firstCondition, firstCondition };
+            var cond1 = new List<Condition>()
+            {
+                new Condition(bethaValue[0] == 0 ? Math.Pow(0.1, 6) : bethaValue[0], sigmaValue[0], dValues[0] == 0 ? Math.Pow(0.1, 6) : dValues[0]),
+                new Condition(bethaValue[1] == 0 ? Math.Pow(0.1, 6) : bethaValue[1], sigmaValue[1], dValues[1] == 0 ? Math.Pow(0.1, 6) : dValues[1]),
+                new Condition(bethaValue[2] == 0 ? Math.Pow(0.1, 6) : bethaValue[2], sigmaValue[2], dValues[2] == 0 ? Math.Pow(0.1, 6) : dValues[2])
+            };                                                                                      
+            //2                                                                                    
+            var cond2 = new List<Condition>() {                                                    
+                new Condition(bethaValue[0] == 0 ? Math.Pow(0.1, 6) : bethaValue[0], sigmaValue[0], dValues[0] == 0 ? Math.Pow(0.1, 6) : dValues[0]),
+                new Condition(bethaValue[1] == 0 ? Math.Pow(0.1, 6) : bethaValue[1], sigmaValue[1], dValues[1] == 0 ? Math.Pow(0.1, 6) : dValues[1]),
+                new Condition(bethaValue[2] == 0 ? Math.Pow(0.1, 6) : bethaValue[2], sigmaValue[2], dValues[2] == 0 ? Math.Pow(0.1, 6) : dValues[2]),
+                new Condition(bethaValue[3] == 0 ? Math.Pow(0.1, 6) : bethaValue[3], sigmaValue[3], dValues[3] == 0 ? Math.Pow(0.1, 6) : dValues[3])
+            };                                                                                      
+            //3                                                                                     
+            var cond3 = new List<Condition>()                                                       
+            {                                                                                         
+                new Condition(bethaValue[0] == 0 ? Math.Pow(0.1, 6) : bethaValue[0], sigmaValue[0], dValues[0] == 0 ? Math.Pow(0.1, 6) : dValues[0]),
+                new Condition(bethaValue[1] == 0 ? Math.Pow(0.1, 6) : bethaValue[1], sigmaValue[1], dValues[1] == 0 ? Math.Pow(0.1, 6) : dValues[1]),
+                new Condition(bethaValue[2] == 0 ? Math.Pow(0.1, 6) : bethaValue[2], sigmaValue[2], dValues[2] == 0 ? Math.Pow(0.1, 6) : dValues[2]),
+                new Condition(bethaValue[3] == 0 ? Math.Pow(0.1, 6) : bethaValue[3], sigmaValue[3], dValues[3] == 0 ? Math.Pow(0.1, 6) : dValues[3])
+            };                                                                                      
+            //4                                                                                     
+            var cond4 = new List<Condition>()                                                       
+            {                                                                                         
+                new Condition(bethaValue[0] == 0 ? Math.Pow(0.1, 6) : bethaValue[0], sigmaValue[0], dValues[0] == 0 ? Math.Pow(0.1, 6) : dValues[0]),
+                new Condition(bethaValue[1] == 0 ? Math.Pow(0.1, 6) : bethaValue[1], sigmaValue[1], dValues[1] == 0 ? Math.Pow(0.1, 6) : dValues[1]),
+                new Condition(bethaValue[2] == 0 ? Math.Pow(0.1, 6) : bethaValue[2], sigmaValue[2], dValues[2] == 0 ? Math.Pow(0.1, 6) : dValues[2])
+            };
             //5
-            var cond5 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition };
+            var cond5 = new List<Condition>()
+            {
+                new Condition(bethaValue[0] == 0 ? Math.Pow(0.1, 6) : bethaValue[0], sigmaValue[0], dValues[0] == 0 ? Math.Pow(0.1, 6) : dValues[0]),
+                new Condition(bethaValue[1] == 0 ? Math.Pow(0.1, 6) : bethaValue[1], sigmaValue[1], dValues[1] == 0 ? Math.Pow(0.1, 6) : dValues[1]),
+                new Condition(bethaValue[2] == 0 ? Math.Pow(0.1, 6) : bethaValue[2], sigmaValue[2], dValues[2] == 0 ? Math.Pow(0.1, 6) : dValues[2]),
+                new Condition(bethaValue[3] == 0 ? Math.Pow(0.1, 6) : bethaValue[3], sigmaValue[3], dValues[3] == 0 ? Math.Pow(0.1, 6) : dValues[3])
+            };
             //6
-            var cond6 = new List<Condition>() { firstCondition, firstCondition, firstCondition, firstCondition, firstCondition, firstCondition};
+            var cond6 = new List<Condition>()
+            {
+                new Condition(bethaValue[0] == 0 ? Math.Pow(0.1, 6) : bethaValue[0], sigmaValue[0], 1),
+                new Condition(bethaValue[1] == 0 ? Math.Pow(0.1, 6) : bethaValue[1], sigmaValue[1], 1),
+                new Condition(bethaValue[2] == 0 ? Math.Pow(0.1, 6) : bethaValue[2], sigmaValue[2], 1),
+                new Condition(bethaValue[3] == 0 ? Math.Pow(0.1, 6) : bethaValue[3], sigmaValue[3], 1),
+                new Condition(bethaValue[4] == 0 ? Math.Pow(0.1, 6) : bethaValue[4], sigmaValue[4], 1),
+                new Condition(bethaValue[5] == 0 ? Math.Pow(0.1, 6) : bethaValue[5], sigmaValue[5], 1)
+            };
 
             conditions = new Dictionary<int, List<Condition>>
             {
@@ -186,12 +244,12 @@ namespace NMMP.Triangulation
             var lines =
                         _segments.Select(segment => (
                             from el in _mesh.Segments
-                                let frstVertex = el.GetVertex(0)
-                                let secondVertex = el.GetVertex(1)
-                                let firstFlag = ((frstVertex.X - segment.GetVertex(0).X)*(segment.GetVertex(1).Y - segment.GetVertex(0).Y)
-                                                 == (segment.GetVertex(1).X - segment.GetVertex(0).X)*(frstVertex.Y - segment.GetVertex(0).Y))
-                                let secondFlag = ((secondVertex.X - segment.GetVertex(0).X)*(segment.GetVertex(1).Y - segment.GetVertex(0).Y) 
-                                                  == (segment.GetVertex(1).X - segment.GetVertex(0).X)*(secondVertex.Y - segment.GetVertex(0).Y))
+                            let frstVertex = el.GetVertex(0)
+                            let secondVertex = el.GetVertex(1)
+                            let firstFlag = ((frstVertex.X - segment.GetVertex(0).X) * (segment.GetVertex(1).Y - segment.GetVertex(0).Y)
+                                             == (segment.GetVertex(1).X - segment.GetVertex(0).X) * (frstVertex.Y - segment.GetVertex(0).Y))
+                            let secondFlag = ((secondVertex.X - segment.GetVertex(0).X) * (segment.GetVertex(1).Y - segment.GetVertex(0).Y)
+                                              == (segment.GetVertex(1).X - segment.GetVertex(0).X) * (secondVertex.Y - segment.GetVertex(0).Y))
                             where firstFlag && secondFlag
                             select el)
                             .ToList())
