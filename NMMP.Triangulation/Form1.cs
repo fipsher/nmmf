@@ -62,12 +62,13 @@ namespace NMMP.Triangulation
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var sigmas = tbSigma.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => Convert.ToDouble(s.Replace(',', '.')));
+            var temp = tbSigma.Text.Replace("0", "0,0000001");
+            var sigmas = temp.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => Convert.ToDouble(s));
             var betas = tbBeta.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(b => Convert.ToDouble(b.Replace(',', '.')));
+                .Select(b => Convert.ToDouble(b));
             var d = tbD.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(b => Convert.ToDouble(b.Replace(',', '.')));
+                .Select(b => Convert.ToDouble(b));
             fValue = Convert.ToDouble(textBox2.Text.Replace('.', ','));
             GenerateConditions(sigmas.ToArray(), betas.ToArray(), d.ToArray());
 
@@ -362,6 +363,11 @@ namespace NMMP.Triangulation
             {
                 button1.Enabled = false;
             }
+        }
+
+        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

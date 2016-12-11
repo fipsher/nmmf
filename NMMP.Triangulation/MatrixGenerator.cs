@@ -81,7 +81,7 @@ namespace NMMP.Triangulation
                 }
                 triangleIndex++;
             }
-
+            var index = 0;
             var ntg = _ntg.ToList();
             for (int k = 0; k < ntg.Count; k++)
             {
@@ -89,12 +89,13 @@ namespace NMMP.Triangulation
                 {
                     var ai = ntg[k].Segments[i].Vertex1.ID;
                     var aj = ntg[k].Segments[i].Vertex2.ID;
-                    a[ai, ai] += ReLeft[k][0, 0];
-                    a[ai, aj] += ReLeft[k][0, 1];
-                    a[aj, ai] += ReLeft[k][1, 0];
-                    a[aj, aj] += ReLeft[k][1, 1];
-                    b[ai] += ReRight[k][0];
-                    b[aj] += ReRight[k][1];
+                    a[ai, ai] += ReLeft[index][0, 0];
+                    a[ai, aj] += ReLeft[index][0, 1];
+                    a[aj, ai] += ReLeft[index][1, 0];
+                    a[aj, aj] += ReLeft[index][1, 1];
+                    b[ai] += ReRight[index][0];
+                    b[aj] += ReRight[index][1];
+                    index++;
                 }
             }
             A = DenseMatrix.OfArray(a);
